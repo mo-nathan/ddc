@@ -3,19 +3,31 @@ from log_parser.block_summary import (
     NOTHING_TO_SAY,
 )
 
-EXAMPLE_DATA_BLOCK = [
-    {"url": "/"},
-    {"url": "/foo"},
-    {"url": "/foo/bar"},
-    {"url": "/foo/bar/baz"},
-    {"url": "/woof"},
-    {"url": "/woof"},
+DEFAULT_DATA = [
+    ("url", "/"),
+    ("statuscode", "200"),
+    ("ip", "1.2.3.4"),
+    ("bytessent", "9999"),
 ]
+
+DATA_DIFFS = [
+    [],
+    [("url", "/foo")],
+    [("url", "/foo/bar")],
+    [("url", "/foo/bar/baz"), ("statuscode", "401")],
+    [("url", "/woof")],
+    [("url", "/woof"), ("statuscode", "500")]
+]
+
+
+def example_data_block():
+    return [dict(DEFAULT_DATA + diff) for diff in DATA_DIFFS]
 
 
 class TestBlockSummary(object):
     def test_block_summary(self):
-        summary = BlockSummary(EXAMPLE_DATA_BLOCK, top_n=1)
+        block = example_data_block()
+        summary = BlockSummary(block, top_n=1)
         results = summary.summarize()
         assert any(["/foo" in result for result in results])
         assert not any(["/woof" in result for result in results])

@@ -87,7 +87,7 @@ class LogParser(object):
         start_time = report_time - self.sleep_interval
         alerts = self.real_time_watcher.update(start_time=start_time,
                                                end_time=report_time,
-                                               count=block_summary.count)
+                                               count=block_summary.traffic())
         if not alerts:
             return []
         return alert_report(alerts)
