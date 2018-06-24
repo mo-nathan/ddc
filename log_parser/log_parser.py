@@ -15,11 +15,12 @@ class LogParser(object):
         self.referer_expected = args.referer_expected
         self.window = args.window
         self.sleep_interval = args.interval
-
         self.line_regex = self.line_regex()
         self.bad_lines = 0
         self.line_counter = 0
         self.total_traffic = 0
+        self.error_count = 0
+        self.total_bytes_sent = 0
         self.real_time_watcher = TrafficWatcher(args.window, args.threshold)
         self.log_time_watcher = TrafficWatcher(args.window, args.threshold)
         self.output_stream = output_stream or sys.stdout
@@ -84,6 +85,11 @@ class LogParser(object):
         return report
 
     def update_whole(self, report_time, block_summary):
+        self.error_count += block_summary.error_count
+        self.total_bytes_sent += block_summary.total_bytes_sent
+        return self.update_watchers(report_time, block_summary)
+
+    def update_watchers(self, report_time, block_summary):
         start_time = report_time - self.sleep_interval
         alerts = self.real_time_watcher.update(start_time=start_time,
                                                end_time=report_time,
@@ -93,10 +99,14 @@ class LogParser(object):
         return alert_report(alerts)
 
     def summarize_whole(self):
-        return ["Overall data:",
-                "\tTotal traffic: {}".format(self.total_traffic),
-                "\tTotal lines parsed: {}".format(self.line_counter),
-                "\tUnparsable lines: {}".format(self.bad_lines)]
+        return [
+            "Overall data:",
+            "\tTotal lines parsed: {}".format(self.line_counter),
+            "\tUnparsable lines: {}".format(self.bad_lines),
+            "\tTotal traffic: {}".format(self.total_traffic),
+            "\tTotal errors: {}".format(self.error_count),
+            "\tTotal bytes sent: {}".format(self.total_bytes_sent),
+        ]
 
 
 def alert_report(alerts):
