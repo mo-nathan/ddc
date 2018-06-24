@@ -30,7 +30,7 @@ ARGS = [
     [("-t", "--threshold"),
      {
          "help": ("Alert threshold in calls/second. "
-                 "Default: {}".format(DEFAULT_ALERT_THRESHOLD)),
+                  "Default: {}".format(DEFAULT_ALERT_THRESHOLD)),
          "type": int,
          "default": DEFAULT_ALERT_THRESHOLD,
      }],
