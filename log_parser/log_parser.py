@@ -11,18 +11,17 @@ from log_parser.utils import display_time
 
 
 class LogParser(object):
-    def __init__(self, sleep_interval, threshold, window,
-                 referer_expected=False, output_stream=None):
-        self.referer_expected = referer_expected
-        self.window = window
-        self.sleep_interval = sleep_interval
+    def __init__(self, args, output_stream=None):
+        self.referer_expected = args.referer_expected
+        self.window = args.window
+        self.sleep_interval = args.interval
 
         self.line_regex = self.line_regex()
         self.bad_lines = 0
         self.line_counter = 0
         self.total_traffic = 0
-        self.real_time_watcher = TrafficWatcher(window, threshold)
-        self.log_time_watcher = TrafficWatcher(window, threshold)
+        self.real_time_watcher = TrafficWatcher(args.window, args.threshold)
+        self.log_time_watcher = TrafficWatcher(args.window, args.threshold)
         self.output_stream = output_stream or sys.stdout
 
     def line_regex(self):

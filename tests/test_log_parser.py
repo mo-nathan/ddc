@@ -16,21 +16,28 @@ def bad_sleep(secs):
     raise NotImplementedError
 
 
+class LogParserArgs(object):
+    def __init__(self,
+                 referer_expected=False,
+                 interval=DEFAULT_INTERVAL,
+                 threshold=DEFAULT_ALERT_THRESHOLD,
+                 window=DEFAULT_ALERT_WINDOW):
+        self.referer_expected = referer_expected
+        self.interval = interval
+        self.threshold = threshold
+        self.window = window
+
+
 class TestLogParser(object):
     def test_process_lines(self):
-        parser = LogParser(sleep_interval=DEFAULT_INTERVAL,
-                           threshold=DEFAULT_ALERT_THRESHOLD,
-                           window=DEFAULT_ALERT_WINDOW)
+        parser = LogParser(LogParserArgs())
         block = parser.process_lines(EXAMPLE_DATA)
         summary = parser.summarize(block)
         assert summary[0].startswith("\nDate: ")
 
     def test_process_bad_line(self):
         stream = StringIO()
-        parser = LogParser(sleep_interval=DEFAULT_INTERVAL,
-                           threshold=DEFAULT_ALERT_THRESHOLD,
-                           window=DEFAULT_ALERT_WINDOW,
-                           referer_expected=True,
+        parser = LogParser(LogParserArgs(referer_expected=True),
                            output_stream=stream)
         block = parser.process_lines(BAD_DATA)
         assert "Unable to parse" in stream.getvalue()
@@ -38,9 +45,7 @@ class TestLogParser(object):
         assert NOTHING_TO_SAY in summary
 
     def test_process_lines_with_alert(self):
-        parser = LogParser(sleep_interval=DEFAULT_INTERVAL,
-                           threshold=1,
-                           window=1)
+        parser = LogParser(LogParserArgs(threshold=1, window=1))
         block = parser.process_lines(EXAMPLE_DATA)
         summary = parser.summarize(block)
         assert "Alerts:" in summary
@@ -48,9 +53,7 @@ class TestLogParser(object):
     @mock.patch('log_parser.log_parser.sleep', bad_sleep)
     def test_run_with_bad_sleep(self):
         stream = StringIO()
-        parser = LogParser(sleep_interval=DEFAULT_INTERVAL,
-                           threshold=DEFAULT_ALERT_THRESHOLD,
-                           window=DEFAULT_ALERT_WINDOW,
+        parser = LogParser(LogParserArgs(),
                            output_stream=stream)
         with pytest.raises(NotImplementedError):
             parser.run('./example.data')
@@ -58,9 +61,7 @@ class TestLogParser(object):
     @mock.patch('log_parser.log_parser.sleep', bad_sleep)
     def test_run_with_binary(self):
         stream = StringIO()
-        parser = LogParser(sleep_interval=DEFAULT_INTERVAL,
-                           threshold=DEFAULT_ALERT_THRESHOLD,
-                           window=DEFAULT_ALERT_WINDOW,
+        parser = LogParser(LogParserArgs(),
                            output_stream=stream)
         try:
             parser.run('./binary.data')
