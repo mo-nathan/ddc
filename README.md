@@ -18,9 +18,9 @@ report every 10 seconds, but it will never have anything to say since
 system.  Most UNIX based systems have this installed by default or
 there should be a convenient package available for getting it.
 
-- Run `make run LOG=example.data` to start the process using the
-log data in `example.data`.  `make run` will try to use the
-default log (/var/log/access.log).
+- Run `make run LOG=log_parser/tests/data/example.data` to start the
+process using the log data in `log_parser/tests/data/example.data`.
+`make run` will try to use the default log (/var/log/access.log).
 
 - You can override the defaults using different make variables.
   - LOG - sets the path to the log file (default=/var/log/access.log)
