@@ -8,8 +8,8 @@ from main import (
     DEFAULT_ALERT_WINDOW,
     DEFAULT_INTERVAL,
 )
-EXAMPLE_DATA = open("./example.data").readlines()
-BAD_DATA = open("./bad.data").readlines()
+EXAMPLE_DATA = open("./log_parser/tests/data/example.data").readlines()
+BAD_DATA = open("./log_parser/tests/data/bad.data").readlines()
 
 
 def bad_sleep(secs):
@@ -56,7 +56,7 @@ class TestLogParser(object):
         parser = LogParser(LogParserArgs(),
                            output_stream=stream)
         with pytest.raises(NotImplementedError):
-            parser.run('./example.data')
+            parser.run('./log_parser/tests/data/example.data')
 
     @mock.patch('log_parser.log_parser.sleep', bad_sleep)
     def test_run_with_binary(self):
@@ -64,7 +64,7 @@ class TestLogParser(object):
         parser = LogParser(LogParserArgs(),
                            output_stream=stream)
         try:
-            parser.run('./binary.data')
+            parser.run('./log_parser/tests/data/binary.data')
         except NotImplementedError:
             pass
         assert "Ignoring binary data" in stream.getvalue()
