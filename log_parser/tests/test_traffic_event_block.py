@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2018 Nathan Wilson
+
 import pytest
 from time import time
 from log_parser.traffic_event_block import TrafficEventBlock

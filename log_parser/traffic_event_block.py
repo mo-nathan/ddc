@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2018 Nathan Wilson
+
 class TrafficEventBlock(object):
     def __init__(self, count, start_time, end_time=None):
         if end_time is None:

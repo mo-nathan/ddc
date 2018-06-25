@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2018 Nathan Wilson
+
 NOTHING_TO_SAY = "\tNothing to new to say"
 
 

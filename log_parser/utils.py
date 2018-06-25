@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2018 Nathan Wilson
+
 from calendar import timegm
 from time import (
     gmtime,

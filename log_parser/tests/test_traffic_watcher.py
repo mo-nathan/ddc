@@ -1,3 +1,6 @@
+# MIT License
+# Copyright (c) 2018 Nathan Wilson
+
 from log_parser.traffic_event_block import TrafficEventBlock
 from log_parser.traffic_watcher import (
     ALERT_HIGH_TRAFFIC,

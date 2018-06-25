@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# MIT License
+# Copyright (c) 2018 Nathan Wilson
 
 import argparse
 from log_parser.log_parser import LogParser
