@@ -127,15 +127,16 @@ class LogParser(object):
 
 
 def logtime_split(block, seconds):
+    if not block:
+        return []
     result = []
-    if block:
-        event = TrafficEventBlock(0, epoch_time(block[0]["datetime"]))
-        for entry in block:
-            new_time = epoch_time(entry["datetime"])
-            if not event.add_if_in_range(new_time, seconds):
-                result.append(event)
-                event = TrafficEventBlock(0, new_time)
-        result.append(event)
+    event = TrafficEventBlock(0, epoch_time(block[0]["datetime"]))
+    for entry in block:
+        new_time = epoch_time(entry["datetime"])
+        if not event.add_if_in_range(new_time, seconds):
+            result.append(event)
+            event = TrafficEventBlock(0, new_time)
+    result.append(event)
     return result
 
 
