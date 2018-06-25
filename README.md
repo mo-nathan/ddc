@@ -1,6 +1,6 @@
 # Common Log Format Parser
 
-To run using Docker:
+## To run using Docker:
 
 - The script works with Docker by running the commands:
 ```
@@ -12,7 +12,7 @@ report every 10 seconds, but it will never have anything to say since
 /var/log/access.log on the container is not directly accessible.
 
 
-To run using make:
+## To run using make:
 
 - Ensure that GNU-make (usually just `make`) is installed on your
 system.  Most UNIX based systems have this installed by default or
@@ -36,7 +36,7 @@ default log (/var/log/access.log).
 - Run `make help` for to see any additional targets.
 
 
-Original spec:
+## Original Spec:
 
 Consume an actively written-to w3c-formatted HTTP access log
 (https://en.wikipedia.org/wiki/Common_Log_Format). It should default
@@ -86,3 +86,19 @@ ENTRYPOINT ["python", "main.py"]
 
 and we'll have something else write to that log file.
 
+
+## Suggested Improvements
+
+Functional Improvements:
+- Review output with potential users to improve readability
+- More detail on the errors from the log files
+- Allow the log file to handle log rotation gracefully
+- Stats on the client, user, method and protocol
+- Stats on referer and user-agent for logs with those fields
+- Make which stats are reported configurable
+- Expose code to more types of data to make it more bullet proof
+- Allow users to track specific URLs or parts of URLs (expand "section" idea)
+
+Code Improvements:
+- Generalize the stats accumulation process
+- Not really happy with the way the log time reporting is handled
