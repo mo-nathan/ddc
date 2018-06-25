@@ -23,10 +23,15 @@ log data in `example.data`.  `make run` will try to use the
 default log (/var/log/access.log).
 
 - You can override the defaults using various make variables.
+
 -- LOG - sets the path to the log file (default=/var/log/access.log)
+
 -- THRESHOLD - sets traffic rate which triggers traffic alerts (default=10)
+
 -- WINDOW - sets window for traffic alerts (default=120)
+
 -- INTERVAL - sets sleep internal between reports (default=10)
+
 -- REFERER_EXPECTED - if non-zero, require referer and user-agent (default=0)
 
 - Run `make test` to run the tests.
