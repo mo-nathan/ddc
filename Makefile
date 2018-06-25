@@ -1,7 +1,7 @@
 # Adapted from various Makefiles from projects under
 # https://github.com/masschallenge.
-# All aspects that are copyrighted by MassChallenge are available under
-# the MIT License.
+# All aspects that are copyrighted by MassChallenge or Nathan Wilson
+# are available under the MIT License.
 
 LOG = /var/log/access.log
 THRESHOLD = 10
