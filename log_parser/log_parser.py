@@ -6,8 +6,12 @@ from time import (
     time,
 )
 from log_parser.block_summary import BlockSummary
+from log_parser.traffic_event_block import TrafficEventBlock
 from log_parser.traffic_watcher import TrafficWatcher
-from log_parser.utils import display_time
+from log_parser.utils import (
+    display_time,
+    epoch_time,
+)
 
 
 class LogParser(object):
@@ -90,13 +94,26 @@ class LogParser(object):
         return self.update_watchers(report_time, block_summary)
 
     def update_watchers(self, report_time, block_summary):
+        return (self.update_real_time_watcher(report_time, block_summary) +
+                self.update_log_time_watcher(block_summary))
+
+    def update_real_time_watcher(self, report_time, block_summary):
         start_time = report_time - self.sleep_interval
-        alerts = self.real_time_watcher.update(start_time=start_time,
-                                               end_time=report_time,
-                                               count=block_summary.traffic())
+        alerts = self.real_time_watcher.update(
+            TrafficEventBlock(start_time=start_time,
+                              end_time=report_time,
+                              count=block_summary.traffic()))
         if not alerts:
             return []
-        return alert_report(alerts)
+        return alert_report("Real-time", alerts)
+
+    def update_log_time_watcher(self, block_summary):
+        alerts = []
+        for event_block in logtime_split(block_summary.block, 10):
+            alerts += self.log_time_watcher.update(event_block)
+        if not alerts:
+            return []
+        return alert_report("Log-time", alerts)
 
     def summarize_whole(self):
         return [
@@ -109,5 +126,18 @@ class LogParser(object):
         ]
 
 
-def alert_report(alerts):
-    return ["Alerts:"] + ["\t" + alert for alert in alerts]
+def logtime_split(block, seconds):
+    result = []
+    if block:
+        event = TrafficEventBlock(0, epoch_time(block[0]["datetime"]))
+        for entry in block:
+            new_time = epoch_time(entry["datetime"])
+            if not event.add_if_in_range(new_time, seconds):
+                result.append(event)
+                event = TrafficEventBlock(0, new_time)
+        result.append(event)
+    return result
+
+
+def alert_report(prefix, alerts):
+    return [prefix + " Alerts:"] + ["\t" + alert for alert in alerts]

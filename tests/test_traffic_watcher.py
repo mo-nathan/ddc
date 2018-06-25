@@ -1,3 +1,4 @@
+from log_parser.traffic_event_block import TrafficEventBlock
 from log_parser.traffic_watcher import (
     ALERT_HIGH_TRAFFIC,
     ALERT_TIMEWARP,
@@ -18,9 +19,9 @@ class TestTrafficWatcher(object):
         count = DEFAULT_RATE
         start_time = DEFAULT_START_TIME
         end_time = start_time + TIME_PER_BLOCK
-        assert watcher.update(count=count,
-                              start_time=start_time,
-                              end_time=end_time) == []
+        assert watcher.update(TrafficEventBlock(count=count,
+                                                start_time=start_time,
+                                                end_time=end_time)) == []
 
     def test_alert_triggered(self):
         watcher = TrafficWatcher(DEFAULT_WINDOW, DEFAULT_RATE)
@@ -29,9 +30,10 @@ class TestTrafficWatcher(object):
         end_time = start_time + TIME_PER_BLOCK
         alert = ALERT_HIGH_TRAFFIC.format(count=count,
                                           time=display_time(end_time))
-        assert alert in watcher.update(count=count,
-                                       start_time=start_time,
-                                       end_time=end_time)
+        assert alert in watcher.update(
+            TrafficEventBlock(count=count,
+                              start_time=start_time,
+                              end_time=end_time))
 
     def test_alert_recovery(self):
         watcher = TrafficWatcher(DEFAULT_WINDOW, DEFAULT_RATE)
@@ -40,15 +42,15 @@ class TestTrafficWatcher(object):
         end_time = start_time + TIME_PER_BLOCK
         alert = ALERT_HIGH_TRAFFIC.format(count=count,
                                           time=display_time(end_time))
-        assert alert in watcher.update(count=count,
-                                       start_time=start_time,
-                                       end_time=end_time)
+        assert alert in watcher.update(TrafficEventBlock(count=count,
+                                                         start_time=start_time,
+                                                         end_time=end_time))
         for i in range(int(DEFAULT_WINDOW / DEFAULT_RATE) + 1):
             start_time = end_time
             end_time = end_time + TIME_PER_BLOCK
-            result = watcher.update(count=0,
-                                    start_time=start_time,
-                                    end_time=end_time)
+            result = watcher.update(TrafficEventBlock(count=0,
+                                                      start_time=start_time,
+                                                      end_time=end_time))
         alert = RECOVER_HIGH_TRAFFIC.format(time=display_time(end_time))
         assert alert in result
 
@@ -57,15 +59,15 @@ class TestTrafficWatcher(object):
         count = DEFAULT_RATE
         start_time = DEFAULT_START_TIME
         end_time = start_time + TIME_PER_BLOCK
-        watcher.update(count=count,
-                       start_time=start_time,
-                       end_time=end_time)
+        watcher.update(TrafficEventBlock(count=count,
+                                         start_time=start_time,
+                                         end_time=end_time))
         alert = ALERT_TIMEWARP.format(start_time=display_time(start_time),
                                       end_time=display_time(end_time))
         # Note: start_time has not changed
-        assert alert in watcher.update(count=count,
-                                       start_time=start_time,
-                                       end_time=end_time)
+        assert alert in watcher.update(TrafficEventBlock(count=count,
+                                                         start_time=start_time,
+                                                         end_time=end_time))
 
     def test_last_end_time_default(self):
         watcher = TrafficWatcher(DEFAULT_WINDOW, DEFAULT_RATE)

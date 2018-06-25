@@ -1,4 +1,3 @@
-from log_parser.traffic_event_block import TrafficEventBlock
 from log_parser.utils import display_time
 
 
@@ -26,9 +25,9 @@ class TrafficWatcher(object):
             return self.event_blocks[-1].end_time
         return 0
 
-    def update(self, count, start_time, end_time):
+    def update(self, event_block):
         self.alerts = []
-        self.add_event_block(TrafficEventBlock(count, start_time, end_time))
+        self.add_event_block(event_block)
         if self.latest_rate() > self.alert_rate:
             self.alert_triggered()
         else:

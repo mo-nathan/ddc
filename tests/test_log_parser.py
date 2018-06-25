@@ -48,7 +48,7 @@ class TestLogParser(object):
         parser = LogParser(LogParserArgs(threshold=1, window=1))
         block = parser.process_lines(EXAMPLE_DATA)
         summary = parser.summarize(block)
-        assert "Alerts:" in summary
+        assert "Real-time Alerts:" in summary
 
     @mock.patch('log_parser.log_parser.sleep', bad_sleep)
     def test_run_with_bad_sleep(self):

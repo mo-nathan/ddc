@@ -12,7 +12,7 @@ class BlockSummary(object):
 
     def traffic(self):
         return len(self.block)
-    
+
     def summarize(self):
         self.process_block()
         return self.report()
